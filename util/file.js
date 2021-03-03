@@ -1,4 +1,5 @@
 const fs = require('fs');
+const jsonPath = "./json/";
 
 function getJson(path) {
     const res = {
@@ -41,13 +42,18 @@ function getFileList(path) {
 }
 
 function writeJSON(name, data) {
-    fs.writeFileSync("./json/" + name + '.json', data);
+    fs.writeFileSync(jsonPath + name + '.json', data);
+}
+
+function deleteJSON(name) {
+    fs.unlinkSync(jsonPath + name + ".json")
 }
 
 const JSONUtil = {
     getJson,
     getFileList,
-    writeJSON
+    writeJSON,
+    deleteJSON
 }
 
 module.exports = JSONUtil;
