@@ -40,12 +40,14 @@ function getFileList(path) {
     return filesList;
 }
 
+function writeJSON(name, data) {
+    fs.writeFileSync("./json/" + name + '.json', data);
+}
+
 const JSONUtil = {
     getJson,
-    getFileList
+    getFileList,
+    writeJSON
 }
 
 module.exports = JSONUtil;
-// let rawdata = fs.readFileSync('./json/test.json');
-// let data = JSON.parse(rawdata);
-// console.log(data);

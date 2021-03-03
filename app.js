@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api', apiRouter);
+app.use('/mockAPI', apiRouter);
 
 // 用户请求的自定义api将在这里重新匹配
 app.use(function (req, res) {

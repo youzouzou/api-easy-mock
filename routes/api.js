@@ -14,4 +14,12 @@ router.get('/getAllApi', function (req, res, next) {
     res.send(jsonList);
 });
 
+
+router.post('/addApi', function (req, res, next) {
+    const name = req.body.api.replace("/", "");
+    console.log(name);
+    JSONUtil.writeJSON(name, JSON.stringify(req.body));
+    res.send(JSON.stringify("添加成功"));
+});
+
 module.exports = router;
