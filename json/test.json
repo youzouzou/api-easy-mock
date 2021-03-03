@@ -1,0 +1,17 @@
+{
+    "api": "getData",
+    "desc": "接口描述",
+    "method": "post",
+    "headers": {
+        "token": "abcdefgxxxxxxxxxxxx"
+    },
+    "responseList": [
+        {
+            "data": {
+                "page": 1
+            },
+            "response": {}
+        }
+    ],
+    "defaultResponse": {}
+}
