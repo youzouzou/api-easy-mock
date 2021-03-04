@@ -2,7 +2,7 @@ import React from 'react';
 import { List, Avatar, Button, Input, Select, Popconfirm, message } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
-import { postIcon, getIcon, putIcon, description, deleteIcon } from './../util/icon'
+import { postIcon, getIcon, putIcon, deleteIcon } from './../util/icon'
 import { Link } from "react-router-dom";
 const { Search } = Input;
 const { Option } = Select;
@@ -81,7 +81,7 @@ class Home extends React.Component {
             const method = this.state.method || "";
             this.setState({
                 data: [...this.state.list].filter(item =>
-                    (keyword ? (item.api.indexOf(keyword) > -1 || item.desc.indexOf(keyword) > -1 || item.name.indexOf(keyword) > -1) : true) && (method ? item.method.toUpperCase() == method : true)
+                    (keyword ? (item.api.indexOf(keyword) > -1 || item.desc.indexOf(keyword) > -1 || item.name.indexOf(keyword) > -1) : true) && (method ? item.method.toUpperCase() === method : true)
                 )
             })
         })
@@ -98,6 +98,8 @@ class Home extends React.Component {
                 return deleteIcon;
             case "GET":
                 return getIcon;
+            default:
+                return postIcon;
         }
     }
 
