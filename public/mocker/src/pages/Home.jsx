@@ -2,10 +2,11 @@ import React from 'react';
 import { List, Avatar, Button, Input } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
+import { postIcon, getIcon, putIcon, description, deleteIcon } from './../util/icon'
 const { Search } = Input;
 
 const Wrapper = styled.div`
-    max-width:600px;
+    max-width:800px;
     margin: 0 auto;
     padding:20px;
     .operation-btn{
@@ -54,6 +55,20 @@ class Home extends React.Component {
         }
     }
 
+    getIcon = (method) => {
+        const upperMethod = method.toUpperCase()
+        switch (upperMethod) {
+            case "POST":
+                return postIcon;
+            case "PUT":
+                return putIcon;
+            case "DELETE":
+                return deleteIcon;
+            case "GET":
+                return getIcon;
+        }
+    }
+
 
     render() {
         return <Wrapper>
@@ -68,7 +83,7 @@ class Home extends React.Component {
                             <Button className="operation-btn" type="text" block>修改</Button>,
                             <Button className="operation-btn" type="text" block>删除</Button>]}>
                         <List.Item.Meta
-                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                            avatar={<Avatar src={this.getIcon(item.method)} />}
                             title={item.name}
                             description={<div><div>{item.api}</div><div>{item.desc}</div></div>}
                         />
