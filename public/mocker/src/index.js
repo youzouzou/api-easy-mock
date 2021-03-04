@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import reportWebVitals from './reportWebVitals';
-import { HashRouter, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './pages/Home'
+import Detail from './pages/Detail'
 
 ReactDOM.render(
-  <HashRouter>
-    <Route path="/" render={() => <Home />}></Route>
-    <Route path="/home" render={() => <Home />}></Route>
-  </HashRouter>,
+  <Router>
+    <Switch>
+      <Route path="/" exact render={() => <Home />}></Route>
+      <Route path="/home" render={() => <Home />}></Route>
+      <Route path="/detail" render={() => <Detail />}></Route>
+    </Switch>
+  </Router>,
   document.getElementById('root')
 );
 

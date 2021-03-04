@@ -17,10 +17,21 @@ router.get('/getAllApi', function (req, res, next) {
 
 
 router.post('/addApi', function (req, res, next) {
+    const jsonFileList = JSONUtil.getFileList(jsonPath);
     const name = req.body.api.replace("/", "");
+    if (jsonFileList.indexOf(name + ".json") > -1) {
+        res.send(JSON.stringify({
+            code: 100,
+            msg: "接口已存在"
+        }));
+        return;
+    }
     console.log(name);
     JSONUtil.writeJSON(name, JSON.stringify(req.body));
-    res.send(JSON.stringify("添加成功"));
+    res.send(JSON.stringify({
+        code: 200,
+        msg: "添加成功"
+    }));
 });
 
 router.delete('/deleteApi', function (req, res, next) {

@@ -3,6 +3,7 @@ import { List, Avatar, Button, Input, Select, Popconfirm, message } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
 import { postIcon, getIcon, putIcon, description, deleteIcon } from './../util/icon'
+import { Link } from "react-router-dom";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -31,9 +32,14 @@ const Wrapper = styled.div`
         text-align: center;
         margin-right:10px;
     }
+    .add-btn{
+        float:right;
+        margin:20px 0;
+    }
 `;
 
 class Home extends React.Component {
+
     state = {
         data: [],
         list: [],
@@ -116,7 +122,6 @@ class Home extends React.Component {
         })
     }
 
-
     render() {
         return <Wrapper>
             <Select className="select" defaultValue="" style={{ width: 120 }} onChange={this.handleChange}>
@@ -127,7 +132,7 @@ class Home extends React.Component {
                 <Option value="DELETE">DELETE请求</Option>
             </Select>
             <Search className="search" placeholder="api/名称/描述" onSearch={this.onSearch} enterButton />
-
+            <Link to="/detail?type=add" ><Button type="primary" className="add-btn">新增</Button></Link>
             <List
                 itemLayout="horizontal"
                 dataSource={this.state.data}
