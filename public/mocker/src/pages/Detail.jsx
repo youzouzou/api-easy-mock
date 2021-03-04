@@ -94,7 +94,9 @@ class Detail extends React.Component {
 
                     <Form.Item
                         label="请求方法"
-                        name="path"
+                        name="method"
+                        initialValue="GET"
+                        required
                     >
                         <Select defaultValue="GET" onChange={this.handleChange}>
                             <Option value="GET">GET</Option>
