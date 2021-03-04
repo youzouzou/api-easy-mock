@@ -1,0 +1,27 @@
+{
+    "api": "/test",
+    "desc": "接口描述",
+    "method": "get",
+    "headers": {
+        "token": "token值abcdefgxxxxxxxxxxxx"
+    },
+    "responseList": [
+        {
+            "data": {
+                "page": 2
+            },
+            "response": {
+                "返回数据": "12312321"
+            }
+        },
+        {
+            "data": {
+                "page": 1
+            },
+            "response": {
+                "返回数据": "666666"
+            }
+        }
+    ],
+    "defaultResponse": {}
+}
