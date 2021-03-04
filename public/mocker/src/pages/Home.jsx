@@ -26,7 +26,9 @@ const Wrapper = styled.div`
 class Home extends React.Component {
     state = {
         data: [],
-        list: []
+        list: [],
+        type: "",
+        keyword: ""
     }
     componentDidMount() {
         const _this = this;
@@ -46,17 +48,22 @@ class Home extends React.Component {
 
     onSearch = (value) => {
         console.log(value)
-        if (!value) {
-            this.setState({
-                data: [...this.state.list]
-            })
-        } else {
+        this.setState({
+            keyword: value
+        })
+        this.filter();
+    }
+
+    filter = () => {
+        setTimeout(() => {
+            const keyword = this.state.keyword || "";
+            const method = this.state.method || "";
             this.setState({
                 data: [...this.state.list].filter(item =>
-                    item.api.indexOf(value) > -1 || item.desc.indexOf(value) > -1 || item.name.indexOf(value) > -1
+                    (keyword ? (item.api.indexOf(keyword) > -1 || item.desc.indexOf(keyword) > -1 || item.name.indexOf(keyword) > -1) : true) && (method ? item.method.toUpperCase() == method : true)
                 )
             })
-        }
+        })
     }
 
     getIcon = (method) => {
@@ -74,17 +81,13 @@ class Home extends React.Component {
     }
 
     handleChange = (value) => {
-        if (!value) {
-            this.setState({
-                data: [...this.state.list]
-            })
-        } else {
-            this.setState({
-                data: [...this.state.list].filter(item =>
-                    item.method.toUpperCase() == value
-                )
-            })
+        this.setState(function (state, props) {
+            return {
+                method: value
+            };
         }
+        )
+        this.filter();
     }
 
 
