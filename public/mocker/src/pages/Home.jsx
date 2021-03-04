@@ -21,6 +21,16 @@ const Wrapper = styled.div`
         width:50%;
         margin:20px 0;
     }
+    .method-label{
+        width:50px;
+        display: inline-block;
+        background: #00CC66;
+        opacity:0.5;
+        color:#fff;
+        border-radius:15px;
+        text-align: center;
+        margin-right:10px;
+    }
 `;
 
 class Home extends React.Component {
@@ -113,7 +123,7 @@ class Home extends React.Component {
                             <Button className="operation-btn" type="text" block>删除</Button>]}>
                         <List.Item.Meta
                             avatar={<Avatar src={this.getIcon(item.method)} />}
-                            title={item.name}
+                            title={<div><span className="method-label">{item.method}</span>{item.name}</div>}
                             description={<div><div>{item.api}</div><div>{item.desc}</div></div>}
                         />
                     </List.Item>
