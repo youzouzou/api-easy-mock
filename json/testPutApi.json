@@ -1,1 +1,0 @@
-{"api":"/testPutApi","name":"测试put请求接口","desc":"接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述接口描述","method":"put","headers":{"token":"token值abcdefgxxxxxxxxxxxx"},"responseList":[{"data":{"page":3},"response":{"返回数据":"8888888"}}],"defaultResponse":{}}

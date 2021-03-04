@@ -27,7 +27,9 @@ router.delete('/deleteApi', function (req, res, next) {
     console.log(req.query.api)
     if (req.query.api) {
         JSONUtil.deleteJSON(req.query.api);
-        res.send(JSON.stringify(req.query.api))
+        res.send({
+            code: 200
+        })
     }
 })
 

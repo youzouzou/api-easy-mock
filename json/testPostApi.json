@@ -1,1 +1,0 @@
-{"api":"/testPostApi","name":"测试POST请求接口","desc":"接口描述3","method":"post","headers":{"token":"token值abcdefgxxxxxxxxxxxx"},"responseList":[{"data":{"page":3},"response":{"返回数据":"8888888"}}],"defaultResponse":{}}

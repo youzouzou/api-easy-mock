@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Avatar, Button, Input, Select } from 'antd';
+import { List, Avatar, Button, Input, Select, Popconfirm, message } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
 import { postIcon, getIcon, putIcon, description, deleteIcon } from './../util/icon'
@@ -41,6 +41,11 @@ class Home extends React.Component {
         keyword: ""
     }
     componentDidMount() {
+        this.getList();
+    }
+
+
+    getList = () => {
         const _this = this;
         request({
             url: '/getAllApi',
@@ -49,9 +54,9 @@ class Home extends React.Component {
             console.log(res, typeof res)
             if (res && res.length > 0) {
                 _this.setState({
-                    data: res,
                     list: [...res]
                 })
+                _this.filter();
             }
         })
     }
@@ -100,6 +105,17 @@ class Home extends React.Component {
         this.filter();
     }
 
+    deleteApi = (item) => () => {
+        const _this = this;
+        request({
+            url: '/deleteApi?api=' + item.api.slice(1),
+            method: 'delete',
+        }).then(function (res) {
+            message.success('已删除');
+            _this.getList();
+        })
+    }
+
 
     render() {
         return <Wrapper>
@@ -120,7 +136,12 @@ class Home extends React.Component {
                         actions={[
                             <Button className="operation-btn" type="text" block>详情</Button>,
                             <Button className="operation-btn" type="text" block>修改</Button>,
-                            <Button className="operation-btn" type="text" block>删除</Button>]}>
+                            <Popconfirm
+                                title="确定删除？"
+                                onConfirm={this.deleteApi(item)}
+                                okText="删除"
+                                cancelText="取消"
+                            ><Button className="operation-btn" type="text" block>删除</Button></Popconfirm>]}>
                         <List.Item.Meta
                             avatar={<Avatar src={this.getIcon(item.method)} />}
                             title={<div><span className="method-label">{item.method}</span>{item.name}</div>}
