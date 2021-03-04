@@ -1,36 +1,81 @@
 import React from 'react';
-import { List, Avatar } from 'antd';
+import { List, Avatar, Button, Input } from 'antd';
+import request from './../util/fetch';
+import styled from 'styled-components';
+const { Search } = Input;
 
-const data = [
-    {
-        title: 'Ant Design Title 1',
-    },
-    {
-        title: 'Ant Design Title 2',
-    },
-    {
-        title: 'Ant Design Title 3',
-    },
-    {
-        title: 'Ant Design Title 4',
-    },
-];
+const Wrapper = styled.div`
+    max-width:600px;
+    margin: 0 auto;
+    padding:20px;
+    .operation-btn{
+        font-size:12px;
+        color: #1890ff;
+    }
+    .search{
+        width:50%;
+        margin:20px 0;
+    }
+`;
 
 class Home extends React.Component {
+    state = {
+        data: [],
+        list: []
+    }
+    componentDidMount() {
+        const _this = this;
+        request({
+            url: '/getAllApi',
+            method: 'get',
+        }).then(function (res) {
+            console.log(res, typeof res)
+            if (res && res.length > 0) {
+                _this.setState({
+                    data: res,
+                    list: [...res]
+                })
+            }
+        })
+    }
+
+    onSearch = (value) => {
+        console.log(value)
+        if (!value) {
+            this.setState({
+                data: [...this.state.list]
+            })
+        } else {
+            this.setState({
+                data: [...this.state.list].filter(item =>
+                    item.api.indexOf(value) > -1 || item.desc.indexOf(value) > -1 || item.name.indexOf(value) > -1
+                )
+            })
+        }
+    }
+
+
     render() {
-        <List
-            itemLayout="horizontal"
-            dataSource={data}
-            renderItem={item => (
-                <List.Item>
-                    <List.Item.Meta
-                        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                        title={<a href="https://ant.design">{item.title}</a>}
-                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                    />
-                </List.Item>
-            )}
-        />
+        return <Wrapper>
+            <Search className="search" placeholder="api/名称/描述" onSearch={this.onSearch} enterButton />
+            <List
+                itemLayout="horizontal"
+                dataSource={this.state.data}
+                renderItem={item => (
+                    <List.Item
+                        actions={[
+                            <Button className="operation-btn" type="text" block>详情</Button>,
+                            <Button className="operation-btn" type="text" block>修改</Button>,
+                            <Button className="operation-btn" type="text" block>删除</Button>]}>
+                        <List.Item.Meta
+                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                            title={item.name}
+                            description={<div><div>{item.api}</div><div>{item.desc}</div></div>}
+                        />
+                    </List.Item>
+                )}
+            />
+        </Wrapper>
     }
 }
 

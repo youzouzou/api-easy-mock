@@ -1,5 +1,6 @@
 {
     "api": "/test",
+    "name": "测试接口",
     "desc": "接口描述",
     "method": "get",
     "headers": {
