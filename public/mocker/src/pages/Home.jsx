@@ -1,9 +1,10 @@
 import React from 'react';
-import { List, Avatar, Button, Input } from 'antd';
+import { List, Avatar, Button, Input, Select } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
 import { postIcon, getIcon, putIcon, description, deleteIcon } from './../util/icon'
 const { Search } = Input;
+const { Option } = Select;
 
 const Wrapper = styled.div`
     max-width:800px;
@@ -12,6 +13,9 @@ const Wrapper = styled.div`
     .operation-btn{
         font-size:12px;
         color: #1890ff;
+    }
+    .select{
+        margin:20px;
     }
     .search{
         width:50%;
@@ -69,10 +73,32 @@ class Home extends React.Component {
         }
     }
 
+    handleChange = (value) => {
+        if (!value) {
+            this.setState({
+                data: [...this.state.list]
+            })
+        } else {
+            this.setState({
+                data: [...this.state.list].filter(item =>
+                    item.method.toUpperCase() == value
+                )
+            })
+        }
+    }
+
 
     render() {
         return <Wrapper>
+            <Select className="select" defaultValue="" style={{ width: 120 }} onChange={this.handleChange}>
+                <Option value="">所有类型</Option>
+                <Option value="GET">GET请求</Option>
+                <Option value="POST">POST请求</Option>
+                <Option value="PUT">PUT请求</Option>
+                <Option value="DELETE">DELETE请求</Option>
+            </Select>
             <Search className="search" placeholder="api/名称/描述" onSearch={this.onSearch} enterButton />
+
             <List
                 itemLayout="horizontal"
                 dataSource={this.state.data}
