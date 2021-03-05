@@ -69,12 +69,16 @@ class Detail extends React.Component {
     componentDidMount() {
         const { history } = this.props;
         const params = history.location.params;
-        if (params && params.type === "edit") {
+        if (params && params.data) {
             this.setState({
                 data: { ...params.data },
                 type: params.type
             })
             this.state.formRef.current.setFieldsValue(params.data)
+        } else if (params) {
+            this.setState({
+                type: params.type
+            })
         }
     }
 
@@ -92,6 +96,11 @@ class Detail extends React.Component {
 
     onFinish = (values) => {
         const { history } = this.props;
+        const data = this.state.data;
+        if (this.state.data.api[0] !== "/") {
+            data.api = "/" + data.api;
+            this.setState({ data })
+        }
         request({
             url: '/addApi?type=' + history.location.params.type,
             method: 'post',
@@ -193,6 +202,30 @@ class Detail extends React.Component {
         item.value = e.target.value;
     }
 
+    saveName = (e) => {
+        const data = this.state.data;
+        data.name = e.target.value;
+        this.setState({
+            data
+        })
+    }
+
+    saveDesc = (e) => {
+        const data = this.state.data;
+        data.desc = e.target.value;
+        this.setState({
+            data
+        })
+    }
+
+    saveDefaultResponse = (e) => {
+        const data = this.state.data;
+        data.defaultResponse = e.target.value;
+        this.setState({
+            data
+        })
+    }
+
     deleteParam = (list, index) => {
         list.splice(index, 1)
         this.setState({})
@@ -212,7 +245,7 @@ class Detail extends React.Component {
                         name="name"
                         rules={[{ required: true, message: '必填项' }]}
                     >
-                        <Input />
+                        <Input onChange={this.saveName} />
                     </Form.Item>
 
                     <Form.Item
@@ -220,7 +253,7 @@ class Detail extends React.Component {
                         name="api"
                         rules={[{ required: true, message: '必填项' }]}
                     >
-                        <Input disabled={this.state.type === 'edit'} placeholder="/api" onChange={this.saveApi} />
+                        <Input disabled={this.state.type !== 'add'} placeholder="/api" onChange={this.saveApi} />
                     </Form.Item>
 
                     <Form.Item
@@ -240,7 +273,7 @@ class Detail extends React.Component {
                         label="接口描述"
                         name="desc"
                     >
-                        <Input />
+                        <Input onChange={this.saveDesc} />
                     </Form.Item>
 
 
@@ -252,6 +285,7 @@ class Detail extends React.Component {
                     // }]}
                     >
                         <TextArea
+                            onChange={this.saveDefaultResponse}
                             placeholder="默认返回值"
                             autoSize={{ minRows: 3, maxRows: 6 }}
                         />
@@ -298,9 +332,12 @@ class Detail extends React.Component {
                         <Button onClick={this.back} className="cancel-btn">
                             返回
                         </Button>
-                        <Button type="primary" htmlType="submit">
-                            保存
-                        </Button>
+                        {
+                            this.state.type === "read" ? null :
+                                <Button type="primary" htmlType="submit">
+                                    保存
+                                </Button>
+                        }
                     </Form.Item>
                 </Form>
             </FormWrapper>

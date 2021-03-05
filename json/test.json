@@ -1,1 +1,1 @@
-{"api":"/test","name":"测试接口","desc":"这里可以描述接口的约定","method":"GET","headers":{},"responseList":[{"params":[{"key":"page","value":"1"},{"key":"user","value":"张三"}],"response":"请求成功"}],"defaultResponse":"默认返回值"}
+{"api":"/test","name":"测试接口","desc":"描述","method":"GET","headers":{},"responseList":[{"params":[{"key":"page","value":"1"}],"response":"88888888"}],"defaultResponse":"666666"}

@@ -124,12 +124,13 @@ class Home extends React.Component {
         })
     }
 
-    edit = (item) => () => {
+    goToDetail = (item, type) => () => {
+        console.log(type)
         const { history } = this.props;
         history.push({
             pathname: "/detail",
             params: {
-                type: "edit",
+                type: type,
                 data: item
             }
         })
@@ -145,15 +146,15 @@ class Home extends React.Component {
                 <Option value="DELETE">DELETE请求</Option>
             </Select>
             <Search className="search" placeholder="api/名称/描述" onSearch={this.onSearch} enterButton />
-            <Link to="/detail?type=add" ><Button type="primary" className="add-btn">新增</Button></Link>
+            <Button onClick={this.goToDetail(null, "add")} type="primary" className="add-btn">新增</Button>
             <List
                 itemLayout="horizontal"
                 dataSource={this.state.data}
                 renderItem={item => (
                     <List.Item
                         actions={[
-                            <Button className="operation-btn" type="text" block>详情</Button>,
-                            <Button onClick={this.edit(item)} className="operation-btn" type="text" block>修改</Button>,
+                            <Button onClick={this.goToDetail(item, "read")} className="operation-btn" type="text" block>详情</Button>,
+                            <Button onClick={this.goToDetail(item, "edit")} className="operation-btn" type="text" block>修改</Button>,
                             <Popconfirm
                                 title="确定删除？"
                                 onConfirm={this.deleteApi(item)}
