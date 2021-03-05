@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import styled from 'styled-components';
 import ReactJson from 'react-json-view';
 import { Form, Input, Button, Select, Card, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import request from './../util/fetch';
 const { Option } = Select;
 const { TextArea } = Input;
@@ -21,6 +21,10 @@ const Wrapper = styled.div`
         margin-left:5px;
         color:red;
         font-size:10px;
+    }
+    .delete-icon{
+        margin:3px 0 0 3px;
+        color:#bbb;
     }
 `;
 const FormWrapper = styled.div`
@@ -213,6 +217,11 @@ class Detail extends React.Component {
         item.value = e.target.value;
     }
 
+    deleteParam = (list, index) => {
+        list.splice(index, 1)
+        this.setState({})
+    }
+
     render() {
         return <Wrapper>
             <FormWrapper>
@@ -272,6 +281,9 @@ class Detail extends React.Component {
                                         <div className="input-wrapper" key={_index}>
                                             <Input onChange={(e) => { this.saveParamKey(e, item) }} defaultValue={item.key} style={{ width: "150px" }} placeholder="参数名称" />
                                             <Input onChange={(e) => { this.saveParamValue(e, item) }} defaultValue={item.value} placeholder="参数值" />
+                                            <span className="delete-icon">
+                                                <MinusCircleOutlined onClick={() => { this.deleteParam(res.params, _index) }} />
+                                            </span>
                                         </div>
                                     )
                                 }
