@@ -106,7 +106,7 @@ class Detail extends React.Component {
             method: 'post',
             data: this.state.data
         }).then(function (res) {
-            if (res.code == 200) {
+            if (res.code === 200) {
                 message.success('已保存');
                 history.push("/home")
             } else {
@@ -154,10 +154,10 @@ class Detail extends React.Component {
     }
 
     isJSON = (str) => {
-        if (typeof str == 'string') {
+        if (typeof str === 'string') {
             try {
                 var obj = JSON.parse(str);
-                if (typeof obj == 'object' && obj) {
+                if (typeof obj === 'object' && obj) {
                     return true;
                 } else {
                     return false;
