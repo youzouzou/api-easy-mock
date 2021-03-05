@@ -98,7 +98,7 @@ class Detail extends React.Component {
             data: this.state.data
         }).then(function (res) {
             if (res.code == 200) {
-                message.success('已添加');
+                message.success('已保存');
                 history.push("/home")
             } else {
                 message.error(res.msg);
