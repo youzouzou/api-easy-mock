@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import ReactJson from 'react-json-view';
-import { Form, Input, Button, Select, Card, Space } from 'antd';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Select, Card } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -14,6 +14,11 @@ const Wrapper = styled.div`
     .add-icon{
         text-align:right;
         cursor: pointer;
+    }
+    .errmsg{
+        margin-left:5px;
+        color:red;
+        font-size:10px;
     }
 `;
 const FormWrapper = styled.div`
@@ -40,6 +45,7 @@ class Detail extends React.Component {
                 console.log('编辑', edit);
             } */
         },
+        errmsgList: [],
         data: {
             "api": "",
             "name": "",
@@ -49,10 +55,13 @@ class Detail extends React.Component {
             },
             "responseList": [
                 {
-                    "params": {
-                        "": ""
-                    },
-                    "response": ""
+                    "params": [
+                        {
+                            "key": "",
+                            "value": "",
+                        }
+                    ],
+                    "response": "",
                 }
             ],
             "defaultResponse": ""
@@ -62,10 +71,12 @@ class Detail extends React.Component {
     addParam = (index) => () => {
         console.log(index)
         const data = this.state.data;
-        const len = Object.keys(data.responseList[index].params).length;
-        data.responseList[index].params["key" + (len + 1)] = ""
+        data.responseList[index].params.push({
+            key: "",
+            value: ""
+        })
         this.setState({
-            data: data
+            data
         })
     }
 
@@ -75,11 +86,20 @@ class Detail extends React.Component {
     }
 
     onFinish = (values) => {
-        console.log('Success:', values);
+        console.log('Success:', values, this.state.data);
+        // 检查组合中的参数是否都为空，以及返回值的json格式是否正确
+        const data = this.state.data;
+        data.responseList.map(item => {
+            console.log(item)
+        })
     };
 
     handleChange = (value) => {
-        console.log(value)
+        const data = this.state.data;
+        data.method = value
+        this.setState({
+            data
+        })
     }
 
     validateJSON = async (e, value) => {
@@ -88,9 +108,14 @@ class Detail extends React.Component {
         }
     }
 
-    validateResJSON = (e) => {
-        console.log(e.target.value)
-        console.log(this.isJSON(e.target.value))
+    validateResJSON = (e, index) => {
+        const errmsgList = this.state.errmsgList;
+        if (e.target.value && !this.isJSON(e.target.value)) {
+            errmsgList[index] = "JSON格式错误"
+        } else {
+            errmsgList[index] = "";
+        }
+        this.setState({ errmsgList })
     }
 
     isJSON = (str) => {
@@ -114,13 +139,28 @@ class Detail extends React.Component {
     addResponse = () => {
         const data = this.state.data;
         data.responseList.push({
-            "params": {
-            },
+            "params": [
+                {
+                    "key": "",
+                    "value": ""
+                }
+            ],
             "response": ""
         })
+        const errmsgList = this.state.errmsgList;
+        errmsgList.push("");
         this.setState({
-            data: data
+            data,
+            errmsgList
         })
+    }
+
+    saveParamKey = (e, item) => {
+        item.key = e.target.value;
+    }
+
+    saveParamValue = (e, item) => {
+        item.value = e.target.value;
     }
 
     render() {
@@ -178,10 +218,10 @@ class Detail extends React.Component {
                                     参数值
                                 </div>
                                 {
-                                    Object.keys(res.params).map((paramkey, _index) =>
+                                    res.params.map((item, _index) =>
                                         <div className="input-wrapper" key={_index}>
-                                            <Input defaultValue={paramkey} style={{ width: "150px" }} placeholder="参数名称" />
-                                            <Input defaultValue={Object.values(res.params[paramkey])} placeholder="参数值" />
+                                            <Input onChange={(e) => { this.saveParamKey(e, item) }} defaultValue={item.key} style={{ width: "150px" }} placeholder="参数名称" />
+                                            <Input onChange={(e) => { this.saveParamValue(e, item) }} defaultValue={item.value} placeholder="参数值" />
                                         </div>
                                     )
                                 }
@@ -190,10 +230,11 @@ class Detail extends React.Component {
                                 <br />
                                 <div>
                                     返回值
-                                        <TextArea
+                                    <span className="errmsg">{this.state.errmsgList[index]}</span>
+                                    <TextArea
                                         placeholder="JSON格式的返回值"
                                         autoSize={{ minRows: 3, maxRows: 6 }}
-                                        onChange={this.validateResJSON}
+                                        onChange={(e) => { this.validateResJSON(e, index) }}
                                     />
                                 </div>
                             </Card>
@@ -203,7 +244,7 @@ class Detail extends React.Component {
                     <div onClick={this.addResponse}>
                         <Button block><PlusOutlined />添加组合</Button>
                     </div>
-
+                    <br />
                     <Form.Item>
                         <Button className="cancel-btn">
                             返回
