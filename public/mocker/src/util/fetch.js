@@ -1,5 +1,5 @@
 //全局路径
-const commonUrl = '/api'
+const commonUrl = '/mockAPI'
 //解析json
 function parseJSON(response) {
     return response.json()
