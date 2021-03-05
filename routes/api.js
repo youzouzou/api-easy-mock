@@ -18,7 +18,9 @@ router.get('/getAllApi', function (req, res, next) {
 
 router.post('/addApi', function (req, res, next) {
     const jsonFileList = JSONUtil.getFileList(jsonPath);
-    const name = req.body.api.replace("/", "");
+    console.log(req.body.data.api)
+    const name = req.body.data.api.replace("/", "");
+    console.log(jsonFileList, name + '.json')
     if (jsonFileList.indexOf(name + ".json") > -1) {
         res.send(JSON.stringify({
             code: 100,
@@ -27,7 +29,7 @@ router.post('/addApi', function (req, res, next) {
         return;
     }
     console.log(name);
-    JSONUtil.writeJSON(name, JSON.stringify(req.body));
+    JSONUtil.writeJSON(name, JSON.stringify(req.body.data));
     res.send(JSON.stringify({
         code: 200,
         msg: "添加成功"

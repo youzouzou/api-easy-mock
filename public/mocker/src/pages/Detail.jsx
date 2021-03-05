@@ -1,8 +1,10 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import styled from 'styled-components';
 import ReactJson from 'react-json-view';
-import { Form, Input, Button, Select, Card } from 'antd';
+import { Form, Input, Button, Select, Card, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import request from './../util/fetch';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -46,10 +48,11 @@ class Detail extends React.Component {
             } */
         },
         errmsgList: [],
-        data: {
-            "api": "",
-            "name": "",
-            "desc": "",
+        data:
+        {
+            "api": "/test",
+            "name": "测试接口",
+            "desc": "这里可以描述接口的约定",
             "method": "GET",
             "headers": {
             },
@@ -57,15 +60,41 @@ class Detail extends React.Component {
                 {
                     "params": [
                         {
-                            "key": "",
-                            "value": "",
+                            "key": "page",
+                            "value": "1",
+                        },
+                        {
+                            "key": "user",
+                            "value": "张三"
                         }
                     ],
-                    "response": "",
+                    "response": "请求成功",
                 }
             ],
-            "defaultResponse": ""
+            "defaultResponse": "默认返回值"
         }
+        //  {
+        //     "api": "",
+        //     "name": "",
+        //     "desc": "",
+        //     "method": "GET",
+        //     "headers": {
+        //     },
+        //     "responseList": [
+        //         {
+        //             "params": [
+        //                 {
+        //                     "key": "",
+        //                     "value": "",
+        //                 }
+        //             ],
+        //             "response": "",
+        //         }
+        //     ],
+        //     "defaultResponse": ""
+        // }
+
+
     }
 
     addParam = (index) => () => {
@@ -86,11 +115,19 @@ class Detail extends React.Component {
     }
 
     onFinish = (values) => {
-        console.log('Success:', values, this.state.data);
-        // 检查组合中的参数是否都为空，以及返回值的json格式是否正确
-        const data = this.state.data;
-        data.responseList.map(item => {
-            console.log(item)
+        const { history } = this.props;
+        request({
+            url: '/addApi',
+            method: 'post',
+            data: this.state.data
+        }).then(function (res) {
+            if (res.code == 200) {
+                message.success('已添加');
+                history.push("/home")
+            } else {
+                message.error(res.msg);
+            }
+
         })
     };
 
@@ -102,6 +139,12 @@ class Detail extends React.Component {
         })
     }
 
+    saveApi = (e) => {
+        const data = this.state.data;
+        data.api = e.target.value;
+        this.setState({ data })
+    }
+
     validateJSON = async (e, value) => {
         if (value && !this.isJSON(value)) {
             return Promise.reject(new Error('JSON格式错误'));
@@ -109,13 +152,20 @@ class Detail extends React.Component {
     }
 
     validateResJSON = (e, index) => {
-        const errmsgList = this.state.errmsgList;
-        if (e.target.value && !this.isJSON(e.target.value)) {
-            errmsgList[index] = "JSON格式错误"
-        } else {
-            errmsgList[index] = "";
-        }
-        this.setState({ errmsgList })
+        // const errmsgList = this.state.errmsgList;
+        // if (e.target.value && !this.isJSON(e.target.value)) {
+        //     errmsgList[index] = "JSON格式错误"
+        // } else {
+        //     errmsgList[index] = "";
+        // }
+        // this.setState({ errmsgList })
+
+        const data = this.state.data;
+        data.responseList[index].response = e.target.value;
+        this.setState({
+            data
+        })
+
     }
 
     isJSON = (str) => {
@@ -180,10 +230,10 @@ class Detail extends React.Component {
 
                     <Form.Item
                         label="接口路径"
-                        name="path"
+                        name="api"
                         rules={[{ required: true, message: '必填项' }]}
                     >
-                        <Input placeholder="/api" />
+                        <Input placeholder="/api" onChange={this.saveApi} />
                     </Form.Item>
 
                     <Form.Item
@@ -202,12 +252,12 @@ class Detail extends React.Component {
                     <Form.Item
                         label="默认返回结果"
                         name="defaultResponse"
-                        rules={[{
-                            validator: this.validateJSON,
-                        }]}
+                    // rules={[{
+                    //     validator: this.validateJSON,
+                    // }]}
                     >
                         <TextArea
-                            placeholder="JSON格式的默认返回值"
+                            placeholder="默认返回值"
                             autoSize={{ minRows: 3, maxRows: 6 }}
                         />
                     </Form.Item>
@@ -232,7 +282,8 @@ class Detail extends React.Component {
                                     返回值
                                     <span className="errmsg">{this.state.errmsgList[index]}</span>
                                     <TextArea
-                                        placeholder="JSON格式的返回值"
+                                        defaultValue={res.response}
+                                        // placeholder="JSON格式的返回值"
                                         autoSize={{ minRows: 3, maxRows: 6 }}
                                         onChange={(e) => { this.validateResJSON(e, index) }}
                                     />
@@ -262,4 +313,4 @@ class Detail extends React.Component {
     }
 }
 
-export default Detail;
+export default withRouter(Detail);
