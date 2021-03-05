@@ -20,8 +20,9 @@ router.post('/addApi', function (req, res, next) {
     const jsonFileList = JSONUtil.getFileList(jsonPath);
     console.log(req.body.data.api)
     const name = req.body.data.api.replace("/", "");
+    const type = req.query.type;
     console.log(jsonFileList, name + '.json')
-    if (jsonFileList.indexOf(name + ".json") > -1) {
+    if (type === "add" && jsonFileList.indexOf(name + ".json") > -1) {
         res.send(JSON.stringify({
             code: 100,
             msg: "接口已存在"

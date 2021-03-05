@@ -43,6 +43,7 @@ const JSONWrapper = styled.div`
 class Detail extends React.Component {
 
     state = {
+        formRef: React.createRef(),
         jsonOptions: {
             theme: "monokai",
             displayDataTypes: false,
@@ -51,54 +52,30 @@ class Detail extends React.Component {
                 console.log('编辑', edit);
             } */
         },
+        type: "edit",
         errmsgList: [],
-        data:
-        {
-            "api": "/test",
-            "name": "测试接口",
-            "desc": "这里可以描述接口的约定",
+        data: {
+            "api": "",
+            "name": "",
+            "desc": "",
             "method": "GET",
             "headers": {
             },
-            "responseList": [
-                {
-                    "params": [
-                        {
-                            "key": "page",
-                            "value": "1",
-                        },
-                        {
-                            "key": "user",
-                            "value": "张三"
-                        }
-                    ],
-                    "response": "请求成功",
-                }
-            ],
-            "defaultResponse": "默认返回值"
+            "responseList": [],
+            "defaultResponse": ""
         }
-        //  {
-        //     "api": "",
-        //     "name": "",
-        //     "desc": "",
-        //     "method": "GET",
-        //     "headers": {
-        //     },
-        //     "responseList": [
-        //         {
-        //             "params": [
-        //                 {
-        //                     "key": "",
-        //                     "value": "",
-        //                 }
-        //             ],
-        //             "response": "",
-        //         }
-        //     ],
-        //     "defaultResponse": ""
-        // }
+    }
 
-
+    componentDidMount() {
+        const { history } = this.props;
+        const params = history.location.params;
+        if (params && params.type === "edit") {
+            this.setState({
+                data: { ...params.data },
+                type: params.type
+            })
+            this.state.formRef.current.setFieldsValue(params.data)
+        }
     }
 
     addParam = (index) => () => {
@@ -113,15 +90,10 @@ class Detail extends React.Component {
         })
     }
 
-    changeParamKey = (e) => {
-        console.log(e.target.value)
-
-    }
-
     onFinish = (values) => {
         const { history } = this.props;
         request({
-            url: '/addApi',
+            url: '/addApi?type=' + history.location.params.type,
             method: 'post',
             data: this.state.data
         }).then(function (res) {
@@ -209,6 +181,10 @@ class Detail extends React.Component {
         })
     }
 
+    back = () => {
+        this.props.history.push("/home");
+    }
+
     saveParamKey = (e, item) => {
         item.key = e.target.value;
     }
@@ -225,7 +201,9 @@ class Detail extends React.Component {
     render() {
         return <Wrapper>
             <FormWrapper>
-                <Form initialValues={this.state.data}
+                <Form
+                    ref={this.state.formRef}
+                    initialValues={this.state.data}
                     name="basic"
                     onFinish={this.onFinish}
                 >
@@ -242,7 +220,7 @@ class Detail extends React.Component {
                         name="api"
                         rules={[{ required: true, message: '必填项' }]}
                     >
-                        <Input placeholder="/api" onChange={this.saveApi} />
+                        <Input disabled={this.state.type === 'edit'} placeholder="/api" onChange={this.saveApi} />
                     </Form.Item>
 
                     <Form.Item
@@ -259,6 +237,14 @@ class Detail extends React.Component {
                     </Form.Item>
 
                     <Form.Item
+                        label="接口描述"
+                        name="desc"
+                    >
+                        <Input />
+                    </Form.Item>
+
+
+                    <Form.Item
                         label="默认返回结果"
                         name="defaultResponse"
                     // rules={[{
@@ -271,13 +257,13 @@ class Detail extends React.Component {
                         />
                     </Form.Item>
                     {
-                        this.state.data.responseList.map((res, index) =>
+                        this.state.data.responseList ? this.state.data.responseList.map((res, index) =>
                             <Card key={index} title={"组合" + (index + 1)}>
                                 <div>
                                     参数值
                                 </div>
                                 {
-                                    res.params.map((item, _index) =>
+                                    res.params ? res.params.map((item, _index) =>
                                         <div className="input-wrapper" key={_index}>
                                             <Input onChange={(e) => { this.saveParamKey(e, item) }} defaultValue={item.key} style={{ width: "150px" }} placeholder="参数名称" />
                                             <Input onChange={(e) => { this.saveParamValue(e, item) }} defaultValue={item.value} placeholder="参数值" />
@@ -285,7 +271,7 @@ class Detail extends React.Component {
                                                 <MinusCircleOutlined onClick={() => { this.deleteParam(res.params, _index) }} />
                                             </span>
                                         </div>
-                                    )
+                                    ) : null
                                 }
                                 <div className="add-icon" onClick={this.addParam(index)}><Button block><PlusOutlined />添加请求参数</Button>
                                 </div>
@@ -295,13 +281,13 @@ class Detail extends React.Component {
                                     <span className="errmsg">{this.state.errmsgList[index]}</span>
                                     <TextArea
                                         defaultValue={res.response}
-                                        // placeholder="JSON格式的返回值"
+                                        placeholder="根据参数返回的请求结果"
                                         autoSize={{ minRows: 3, maxRows: 6 }}
                                         onChange={(e) => { this.validateResJSON(e, index) }}
                                     />
                                 </div>
                             </Card>
-                        )
+                        ) : null
                     }
 
                     <div onClick={this.addResponse}>
@@ -309,7 +295,7 @@ class Detail extends React.Component {
                     </div>
                     <br />
                     <Form.Item>
-                        <Button className="cancel-btn">
+                        <Button onClick={this.back} className="cancel-btn">
                             返回
                         </Button>
                         <Button type="primary" htmlType="submit">

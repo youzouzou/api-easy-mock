@@ -3,7 +3,7 @@ import { List, Avatar, Button, Input, Select, Popconfirm, message } from 'antd';
 import request from './../util/fetch';
 import styled from 'styled-components';
 import { postIcon, getIcon, putIcon, deleteIcon } from './../util/icon'
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -124,6 +124,17 @@ class Home extends React.Component {
         })
     }
 
+    edit = (item) => () => {
+        const { history } = this.props;
+        history.push({
+            pathname: "/detail",
+            params: {
+                type: "edit",
+                data: item
+            }
+        })
+    }
+
     render() {
         return <Wrapper>
             <Select className="select" defaultValue="" style={{ width: 120 }} onChange={this.handleChange}>
@@ -142,7 +153,7 @@ class Home extends React.Component {
                     <List.Item
                         actions={[
                             <Button className="operation-btn" type="text" block>详情</Button>,
-                            <Button className="operation-btn" type="text" block>修改</Button>,
+                            <Button onClick={this.edit(item)} className="operation-btn" type="text" block>修改</Button>,
                             <Popconfirm
                                 title="确定删除？"
                                 onConfirm={this.deleteApi(item)}
@@ -161,4 +172,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default withRouter(Home);
