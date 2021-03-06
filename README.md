@@ -2,13 +2,15 @@
 
 > 最简单<s>好用</s>的api-mock工具
 
+
 前端：React+Antd
+
 后端：Node+Express
 
 ---
 ### 项目简介
 
-这个项目最开始是因为前端代码写的比较快，后端接口跟不上，并且都1202年了给的接口文档还是word（我不是说word不行，word🐂🍺）......
+这个项目最开始是因为前端在找mock api工具的时候发现easy-mock竟然挂掉了......
 
 更主要的是，后端这次给的接口，竟然只有一个，不不不，准确点说，是只有一个url请求，通过一个叫作`code`的参数字段来区分不同的接口🤷‍♀️
 
@@ -31,7 +33,8 @@ cd 进入项目
 ---
 
 ### 效果预览
-
+<img src="https://github.com/youzouzou/api-easy-mock/home.jpg">
+<img src="https://github.com/youzouzou/api-easy-mock/detail.jpg">
 
 
 ---
