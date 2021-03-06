@@ -39,35 +39,38 @@ app.use('/mockAPI', apiRouter);
 // 用户请求的自定义api将在这里重新匹配
 app.use(function (req, res) {
   const jsonList = getJSONList();
+  let hasFindResponse = false;
+  let result = "未找到该方法";
   jsonList.map(item => {
-    console.log(item.api, req._parsedUrl.pathname)
-    console.log(item.method, req.method)
     if (item.api == req._parsedUrl.pathname && item.method.toUpperCase() == req.method.toUpperCase()) { // api和method匹配到
       if (item.responseList && item.responseList.length > 0) { // 有定义响应数组
-        let response = null;
         item.responseList.map(paramAndResObj => {
-          const params = paramAndResObj.data;
-          // 将定义中的参数与请求参数作比较，只有请求参数值与定义的都全部一样，才返回对应结果
-          let isMatch = true;
-          for (key in params) {
-            if (params[key] != req.query[key]) {
-              isMatch = false;
-              break;
+          console.log(paramAndResObj)
+          const params = paramAndResObj.params;
+          // 将定义中的参数数组与请求参数作比较，只有请求参数的key与value和定义的全部一样，才返回对应结果
+          let hasAllKey = true;
+          let hasMatchAllValue = true;
+          // 遍历定义中的参数数组
+          params.map(param => {
+            if (!req.query.hasOwnProperty(param.key)) {
+              hasAllKey = false;
+            } else if (param.value != req.query[param.key]) {
+              hasMatchAllValue = false;
             }
-            console.log(params[key]);
-          }
-          if (isMatch) {
-            response = paramAndResObj.response;
+          })
+          if (hasAllKey && hasMatchAllValue && !hasFindResponse) {
+            result = paramAndResObj.response;
+            hasFindResponse = true;
           }
         })
-        res.send(response);
-      } else {
-        res.send(JSON.stringify({ val: 222 }));
       }
-
+      if (!hasFindResponse) {
+        result = item.defaultResponse;
+      }
     }
   })
-  res.send("未找到该方法");
+  console.log(result)
+  res.send(result);
 })
 
 // catch 404 and forward to error handler
