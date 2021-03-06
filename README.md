@@ -33,8 +33,8 @@ cd 进入项目
 ---
 
 ### 效果预览
-<img src="https://github.com/youzouzou/api-easy-mock/home.jpg">
-<img src="https://github.com/youzouzou/api-easy-mock/detail.jpg">
+<img src="https://github.com/youzouzou/api-easy-mock/blob/main/home.jpg">
+<img src="https://github.com/youzouzou/api-easy-mock/blob/main/detail.jpg">
 
 
 ---
