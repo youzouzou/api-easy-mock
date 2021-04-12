@@ -19,7 +19,7 @@ router.get('/getAllApi', function (req, res, next) {
 router.post('/addApi', function (req, res, next) {
     const jsonFileList = JSONUtil.getFileList(jsonPath);
     console.log(req.body.data.api)
-    const name = req.body.data.api.replace("/", "");
+    const name = req.body.data.api.replace(/\//g, "_");
     const type = req.query.type;
     console.log(jsonFileList, name + '.json')
     if (type === "add" && jsonFileList.indexOf(name + ".json") > -1) {
