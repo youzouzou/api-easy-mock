@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
 require('./util/file')
+var openUrl = require('./util/open')
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/mockAPI', apiRouter);
+openUrl("http://localhost:3006")
 
 // 用户请求的自定义api将在这里重新匹配
 app.use(function (req, res) {
