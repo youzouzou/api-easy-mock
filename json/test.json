@@ -1,1 +1,0 @@
-{"api":"/test","name":"测试接口","desc":"描述","method":"GET","headers":{},"responseList":[{"params":[{"key":"page","value":"1"}],"response":"88888888"}],"defaultResponse":"666666"}

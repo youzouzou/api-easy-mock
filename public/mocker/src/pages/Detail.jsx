@@ -52,7 +52,7 @@ class Detail extends React.Component {
                 console.log('编辑', edit);
             } */
         },
-        type: "edit",
+        params: {},
         errmsgList: [],
         data: {
             "api": "",
@@ -67,19 +67,34 @@ class Detail extends React.Component {
     }
 
     componentDidMount() {
-        const { history } = this.props;
-        const params = history.location.params;
-        if (params && params.data) {
-            this.setState({
-                data: { ...params.data },
-                type: params.type
-            })
-            this.state.formRef.current.setFieldsValue(params.data)
-        } else if (params) {
-            this.setState({
-                type: params.type
-            })
+        const { params: { data = {} } } = this.props.match;
+        const obj = {};
+        for (let i of data.split("&")) {
+            obj[i.split("=")[0]] = i.split("=")[1];  //对数组每项用=分解开，=前为对象属性名，=后为属性值
         }
+        console.log(obj)
+        this.setState({
+            params: obj
+        })
+        this.getApiData(obj.api)
+    }
+
+    getApiData = (api) => {
+        const _this = this
+        request({
+            url: '/getApi?api=' + api,
+            method: 'get',
+        }).then(function (res) {
+            if (res.code === 200) {
+                _this.setState({
+                    data: res.data
+                })
+                _this.state.formRef.current.setFieldsValue(res.data)
+            } else {
+                message.error(res.msg);
+            }
+
+        })
     }
 
     addParam = (index) => () => {
@@ -102,7 +117,7 @@ class Detail extends React.Component {
             this.setState({ data })
         }
         request({
-            url: '/addApi?type=' + history.location.params.type,
+            url: '/addApi?type=' + this.state.params.type,
             method: 'post',
             data: this.state.data
         }).then(function (res) {
@@ -253,7 +268,7 @@ class Detail extends React.Component {
                         name="api"
                         rules={[{ required: true, message: '必填项' }]}
                     >
-                        <Input disabled={this.state.type !== 'add'} placeholder="/api" onChange={this.saveApi} />
+                        <Input disabled={this.state.params.type === 'edit'} placeholder="/api" onChange={this.saveApi} />
                     </Form.Item>
 
                     <Form.Item
@@ -333,7 +348,7 @@ class Detail extends React.Component {
                             返回
                         </Button>
                         {
-                            this.state.type === "read" ? null :
+                            this.state.params.type === "read" ? null :
                                 <Button type="primary" htmlType="submit">
                                     保存
                                 </Button>

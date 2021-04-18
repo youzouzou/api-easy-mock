@@ -128,7 +128,7 @@ class Home extends React.Component {
         console.log(type)
         const { history } = this.props;
         history.push({
-            pathname: `/detail?type=${type}&api=${item.api.replace(/\//g, '_')}`
+            pathname: `/detail/type=${type}&api=${item.api.replace(/\//g, '_')}`
         })
     }
 
@@ -151,6 +151,7 @@ class Home extends React.Component {
                         actions={[
                             <Button onClick={this.goToDetail(item, "read")} className="operation-btn" type="text" block>详情</Button>,
                             <Button onClick={this.goToDetail(item, "edit")} className="operation-btn" type="text" block>修改</Button>,
+                            <Button onClick={this.goToDetail(item, "copy")} className="operation-btn" type="text" block>复制</Button>,
                             <Popconfirm
                                 title="确定删除？"
                                 onConfirm={this.deleteApi(item)}

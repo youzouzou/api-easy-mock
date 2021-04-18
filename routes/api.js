@@ -15,6 +15,12 @@ router.get('/getAllApi', function (req, res, next) {
     res.send(jsonList);
 });
 
+router.get('/getApi', function (req, res, next) {
+    const json = JSONUtil.getJson(jsonPath + req.query.api + ".json")
+    console.log(req.query.api, json)
+    res.send(json);
+});
+
 
 router.post('/addApi', function (req, res, next) {
     const jsonFileList = JSONUtil.getFileList(jsonPath);
