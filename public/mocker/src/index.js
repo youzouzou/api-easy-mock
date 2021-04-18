@@ -11,7 +11,7 @@ ReactDOM.render(
     <Switch>
       <Route path="/" exact render={() => <Home />}></Route>
       <Route path="/home" render={() => <Home />}></Route>
-      <Route path="/detail" render={() => <Detail />}></Route>
+      <Route path="/detail/:data" render={() => <Detail />}></Route>
     </Switch>
   </Router>,
   document.getElementById('root')

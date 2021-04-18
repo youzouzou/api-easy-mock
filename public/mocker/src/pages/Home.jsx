@@ -128,11 +128,7 @@ class Home extends React.Component {
         console.log(type)
         const { history } = this.props;
         history.push({
-            pathname: "/detail",
-            params: {
-                type: type,
-                data: item
-            }
+            pathname: `/detail?type=${type}&api=${item.api.replace(/\//g, '_')}`
         })
     }
 
