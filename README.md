@@ -26,7 +26,9 @@
 
 cd 进入项目
 
-`yarn` 安装依赖包
+`npm install -g  node-dev`安装node-dev模块
+
+`npm i` 安装依赖包
 
 `npm run dev` 运行项目
 
